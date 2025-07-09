@@ -1,0 +1,137 @@
+.light-page {
+  height: 100vh;
+  background-color: #0b0f1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Dancing Script', cursive;
+  text-align: center;
+}
+
+.light-heading {
+  color: #e0e0e0;
+  font-size: 48px;
+  margin-bottom: 40px;
+  font-family: 'Dancing Script', cursive;
+}
+
+.light-button {
+  background: linear-gradient(135deg, #ff69b4, #a66cff);
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 16px 36px;
+  border-radius: 40px;
+  box-shadow: 0 0 20px #a66cff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.light-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px #ff69b4, 0 0 50px #a66cff;
+}
+/* === Base Page === */
+.light-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Comic Sans MS', cursive;
+  overflow-x: hidden;
+  color: white;
+  position: relative;
+  transition: background 1s ease;
+}
+
+/* Initial dark background */
+.light-page:not(.light-on) {
+  background-color: #000000; /* pure black */
+}
+
+/* Background after light is turned on */
+.light-on {
+  background: linear-gradient(135deg, #3685df6a, #2889eb); /* light sky blue background */
+}
+
+.light-heading {
+  font-size: 42px;
+  color: #ffffffcc;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.light-button {
+  font-size: 22px;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 40px;
+  background: linear-gradient(to right, #ff69b4, #8a2be2);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 15px #ffb6c1;
+  transition: all 0.3s ease;
+}
+.light-button:hover {
+  transform: scale(1.05);
+}
+
+/* === Banner === */
+.banner {
+  background: linear-gradient(to right, #f80759, #bc4e9c);
+  padding: 14px 30px;
+  border-radius: 14px;
+  font-size: 28px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* === Letter card === */
+.letter-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+  line-height: 1.8;
+  position: relative;
+}
+
+.letter-card h2 {
+  font-size: 26px;
+  color: #b83280;
+  text-align: center;
+  margin-bottom: 20px;
+  text-decoration: underline;
+}
+
+.bottom-wish {
+  margin-top: 20px;
+  font-size: 20px;
+  color: #ff4081;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Confetti canvas (optional, canvas-confetti works without attaching) */
+.confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}

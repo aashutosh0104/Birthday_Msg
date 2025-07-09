@@ -1,103 +1,133 @@
-import Image from "next/image";
+'use client';
+import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import './page.css';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const [hearts, setHearts] = useState([]);
+  const [bgIndex, setBgIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const audioRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const bgImages = [
+    '/Background/Background_image_1.png',
+    '/Background/Background_image_2.png',
+    '/Background/Background_image_3.png',
+    '/Background/Background_image_4.png',
+    '/Background/Background_image_5.png',
+    '/Background/Background_image_6.png',
+  ];
+
+  // Change background every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % bgImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Generate hearts every few seconds
+  useEffect(() => {
+    const generateHearts = () => {
+      const newHearts = Array.from({ length: 10 }).map(() => ({
+        left: `${Math.random() * 100}vw`,
+        delay: `${Math.random() * 5}s`,
+        duration: `${4 + Math.random() * 6}s`,
+        width: `${20 + Math.random() * 10}px`,
+        height: `${20 + Math.random() * 10}px`,
+        id: Math.random().toString(36).substr(2, 9)
+      }));
+      setHearts(prev => [...prev, ...newHearts]);
+    };
+
+    generateHearts();
+    const interval = setInterval(generateHearts, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Toggle music
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleClick = () => {
+    router.push('/wish');
+  };
+
+  return (
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden transition-all duration-1000 ease-in-out">
+
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ backgroundImage: `url(${bgImages[bgIndex]})` }}
+      ></div>
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-pink-100/15 via-white/10 to-pink-100/15 z-0"></div>
+
+      {/* Floating Hearts */}
+      <div className="heart-bg absolute inset-0 z-0 pointer-events-none">
+        {hearts.map((heart) => (
+          <svg
+            key={heart.id}
+            className="svg-heart absolute animate-float"
+            viewBox="0 0 32 29.6"
+            fill="red"
+            style={{
+              left: heart.left,
+              animationDelay: heart.delay,
+              animationDuration: heart.duration,
+              width: heart.width,
+              height: heart.height,
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            <path d="M23.6,0c-3.4,0-6.4,2.1-7.6,5.2C14.8,2.1,11.8,0,8.4,0
+              C3.8,0,0,3.8,0,8.4c0,9.2,16,21.2,16,21.2s16-12,16-21.2
+              C32,3.8,28.2,0,23.6,0z"/>
+          </svg>
+        ))}
+      </div>
+
+      {/* 🔊 Music Toggle Button */}
+      <div className="absolute top-4 right-4 z-20">
+        <button
+          onClick={toggleMusic}
+          className="text-pink-600 bg-white/80 hover:bg-white shadow-md rounded-full p-3 transition-all"
+          title={isPlaying ? "Pause Music" : "Play Music"}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          {isPlaying ? '🔊' : '🔇'}
+        </button>
+      </div>
+
+      {/* Stylish White Box */}
+      <div className="backdrop-blur-2xl bg-white/40 shadow-2xl rounded-[2rem] px-12 py-20 max-w-xl w-full text-center relative z-10 animate-fade-in min-h-[650px] flex flex-col justify-between transition duration-500 hover:scale-[1.03] hover:shadow-[0_0_60px_#f9a8d4]">
+        <h1 className="text-5xl font-extrabold mb-4 text-pink-600 font-cursive drop-shadow-[2px_2px_2px_rgba(249,168,212,0.6)]">
+          🎂 Happy Birthday Bachha 🎈💖
+        </h1>
+        <p className="text-lg text-gray-700 mb-8 px-4">
+          You make life sweeter just by being in it! Wishing you love, sparkles, laughter, and magic all day long. ✨🌸
+        </p>
+        <button
+          onClick={handleClick}
+          className="bg-pink-500 hover:bg-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg animate-pulse transition-all duration-300"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Click for Surprise 💝
+        </button>
+      </div>
+
+      {/* Audio Element */}
+      <audio ref={audioRef} loop>
+        <source src="/Background/Happy_birthday_song.mp3" type="audio/mpeg" />
+      </audio>
     </div>
   );
 }
